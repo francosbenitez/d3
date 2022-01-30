@@ -1,6 +1,9 @@
 d3.json('js/data/forecast.json', function(d) {
 
   var temperatures = [],
+
+      dates = []
+
       margin = { top: 0, right: 0, bottom: 30, left: 20 }
       height = 400 - margin.top - margin.bottom,
       width = 600 - margin.left - margin.right;
@@ -9,13 +12,24 @@ d3.json('js/data/forecast.json', function(d) {
         yScale,
         yAxisValues,
         yAxisTicks,
+
+        xAxisValues,
+        xAxisTicks,
+
         xScale,
         colors,
         tooltip,
+
+        yGuide,
+        xGuide,
+
         myChart;
 
   for (var i = 0; i<d.list.length; i++) {
     temperatures.push(d.list[i].main.temp);
+
+    dates.push(new Date(d.list[i].dt_txt));
+
   }
 
   yScale = d3.scaleLinear()
@@ -34,6 +48,16 @@ d3.json('js/data/forecast.json', function(d) {
     .paddingInner(.1)
     .paddingOuter(.1)
     .range([0, width])
+
+  xAxisValues = d3.scaleTime()
+    .domain([dates[0], dates[(dates.length) - 1]])
+    .range([0, width])
+
+  xAxisTicks = d3.axisBottom(xAxisValues)
+
+    // Every single day I want to create a different
+    // tick
+    .ticks(d3.timeDay.every(1))  
 
   colors = d3.scaleLinear()
     .domain([0, 65, d3.max(temperatures)])
@@ -87,6 +111,10 @@ d3.json('js/data/forecast.json', function(d) {
   yGuide = d3.select('#viz svg').append('g')
             .attr('transform', 'translate(20,0)')
             .call(yAxisTicks)
+
+  xGuide = d3.select('#viz svg').append('g')
+            .attr('transform', 'translate(20,' + height + ')')
+            .call(xAxisTicks)
 
   myChart.transition()
     .attr('height', function(d) {
