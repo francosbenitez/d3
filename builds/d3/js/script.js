@@ -1,8 +1,21 @@
 d3.json('js/data/forecast.json', function(d) {
 
   var temperatures = [],
-      height = 400,
-      width = 600;
+
+      margin = { 
+        top: 0,
+        right: 0,
+        bottom: 30,
+        left: 30
+      }
+
+      // height = 400,
+
+      height = 400 - margin.top - margin.bottom,
+
+      // width = 600;
+
+      width = 600 - margin.left - margin.right;
 
   var   tempColor,
         yScale,
@@ -46,9 +59,19 @@ d3.json('js/data/forecast.json', function(d) {
     .style('opacity', 0);
 
   myChart = d3.select('#viz').append('svg')
-    .attr('width', width)
-    .attr('height', height)
+
+    // Instead of minus, we add pluses (in comparison to
+    // the width & height located at the beginning)
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+
+    // .attr('width', width)
+    // .attr('height', height)
     .append('g')
+
+    .attr('transform', 
+      'translate(' + margin.left + ',' + margin.right + ')')
+
     .selectAll('rect').data(temperatures)
     .enter().append('rect')
       .attr('fill', colors)
