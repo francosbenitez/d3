@@ -96,5 +96,5 @@ myChart.transition()
       // This delays even more the emergence of
       // each bar in the graph
       .duration(1000)
-
+      
       .ease(d3.easeBounceOut)
