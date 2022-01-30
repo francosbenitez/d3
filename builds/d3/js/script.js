@@ -1,5 +1,5 @@
 var bardata = [];
-    for (var i = 0; i<100; i++) {
+    for (var i = 0; i<50; i++) {
       bardata.push(Math.random() * 30);
     }
 var height = 400,
@@ -26,7 +26,7 @@ var colors = d3.scaleLinear()
     .range(['#B58929', '#C61C6F',
             '#268BD2', '#85992C'])
 
-d3.select('#viz').append('svg')
+var myChart = d3.select('#viz').append('svg')
   .attr('width', width)
   .attr('height', height)
 .selectAll('rect').data(bardata)
@@ -37,26 +37,64 @@ d3.select('#viz').append('svg')
     .attr('width', function(d) {
       return xScale.bandwidth();
     })
-    .attr('height', function(d) {
-      return yScale(d);
-    })
+    // .attr('height', function(d) {
+    //   return yScale(d);
+    // })
+
+    .attr('height', 0)
+
     .attr('x', function(d) {
       return xScale(d);
     })
-    .attr('y', function(d) {
-      return height - yScale(d);
-    })
+
+    .attr('y', height)
+
+    // .attr('height', function(d) {
+    //   return yScale(d);
+    // })
+
+    // .attr('y', function(d) {
+    //   return height - yScale(d);
+    // })
     
-    .on('mouseover', function(d) {
+    .on('mouseover', function(d ) {
       tempColor = this.style.fill;
       d3.select(this)
+
+        // .transition()
+
+        // .delay(400)
+
+        // .duration(1000)
+
         .style('fill', 'yellow')
     })
 
     .on('mouseout', function(d) {
       d3.select(this)
+        
+        // .transition()
+
         .style('fill', tempColor)
     })
     
+myChart.transition()
+      .attr('height', function(d) {
+        return yScale(d);
+      })
 
-    ;
+      .attr('y', function(d) {
+        return height - yScale(d);
+      })
+
+      // This delays the emergence of 
+      // each bar in the graph
+      .delay(function (d, i) {
+        return i * 20;
+      })
+
+      // This delays even more the emergence of
+      // each bar in the graph
+      .duration(1000)
+
+      .ease(d3.easeBounceOut)
