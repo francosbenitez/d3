@@ -5,7 +5,9 @@ var bardata = [];
 var height = 400,
     width = 600,
     barWidth = 50,
-    barOffset = 5;
+    barOffset = 5,
+
+    tempColor;
 
 var yScale = d3.scaleLinear()
     .domain([0, d3.max(bardata)])
@@ -44,4 +46,28 @@ d3.select('#viz').append('svg')
     })
     .attr('y', function(d) {
       return height - yScale(d);
-    });
+    })
+    
+    // This doesn't work
+    // .on('mouseover', d => {
+      
+    // This works
+    .on('mouseover', function(d) {
+
+      // This adds the yellow color on hover
+      tempColor = this.style.fill
+
+      d3.select(this)
+        // .style('opacity', .5)
+
+        .style('fill', 'yellow')
+    })
+
+    .on('mouseout', function(d) {
+      d3.select(this)
+        // .style('opacity', 1)
+
+      // This removes the yellow color out hover
+        .style('fill', tempColor)
+    })
+
